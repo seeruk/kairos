@@ -1,0 +1,6 @@
+package: github.com/SeerUK/cnotifyd
+import:
+- package: github.com/esiqveland/notify
+- package: github.com/godbus/dbus
+  version: ^4.0.0
+- package: github.com/skratchdot/open-golang

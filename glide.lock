@@ -1,0 +1,8 @@
+hash: 64831da46a2bf4f6cd94386be80bdac093b57821e203c5aea94c13c300ee64da
+updated: 2017-08-20T20:47:28.132680542+01:00
+imports:
+- name: github.com/esiqveland/notify
+  version: 564c42ed9491326e30b1951d1e1b17c25e7b6ef2
+- name: github.com/godbus/dbus
+  version: 5f6efc7ef2759c81b7ba876593971bfce311eab3
+testImports: []
