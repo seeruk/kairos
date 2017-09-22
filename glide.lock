@@ -1,10 +1,19 @@
-hash: b9542ba2141ffc420dee55a250f452e9abc73b3d8adc8a90d4fe44855d8551d5
-updated: 2017-08-20T21:13:47.907370681+01:00
+hash: 31c45f6d64c6145c8748019b839b43aa4b7d63412eabd86bf202f43eeb4143b1
+updated: 2017-09-22T22:48:44.308670684+01:00
 imports:
 - name: github.com/esiqveland/notify
-  version: 564c42ed9491326e30b1951d1e1b17c25e7b6ef2
+  version: 21a10e207052b33cb36ac9e1e166ffa1a55cb3c5
 - name: github.com/godbus/dbus
   version: 5f6efc7ef2759c81b7ba876593971bfce311eab3
+- name: github.com/gotk3/gotk3
+  version: 83307073d5a2ef29b1bd1c1d49eefa39c53a41fe
+  repo: git@github.com:SeerUK/gotk3.git
+  subpackages:
+  - cairo
+  - gdk
+  - glib
+  - gtk
+  - pango
 - name: github.com/skratchdot/open-golang
   version: 75fb7ed4208cf72d323d7d02fd1a5964a7a9073c
   subpackages:
