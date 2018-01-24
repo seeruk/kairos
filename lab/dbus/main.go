@@ -1,4 +1,4 @@
-package dbus
+package main
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"github.com/esiqveland/notify"
 	"github.com/godbus/dbus"
 	"github.com/skratchdot/open-golang/open"
+	"strings"
 )
 
 func main() {
@@ -15,17 +16,22 @@ func main() {
 		panic(err)
 	}
 
-	icon := "x-office-calendar"
+	icon := "appointment-soon"
+
+	hints := make(map[string]dbus.Variant)
+	hints["urgency"] = dbus.MakeVariant([]byte{2})
 
 	notification := notify.Notification{
 		AppName:       "cnotifyd",
 		ReplacesID:    0,
 		AppIcon:       icon,
-		Summary:       "test",
-		Body:          "This is a test",
-		Actions:       []string{"open", "Open"},
+		Summary:       "Climbing at The Depot, Pudsey",
+		Body:          "in 10 minutes",
+		Actions:       []string{
+			"open:https://www.google.co.uk/", "Open",
+			"snooze", "Snooze",
+		},
 		Hints:         make(map[string]dbus.Variant),
-		ExpireTimeout: 5000,
 	}
 
 	notifier, err := notify.New(conn)
@@ -44,11 +50,25 @@ func main() {
 	go func() {
 		action := <-actions
 
-		fmt.Printf("Action invoked: %v, with key %v\n", action.Id, action.ActionKey)
+		fmt.Printf("Action invoked: %v, with key %v\n", action.ID, action.ActionKey)
 
-		err := open.Run("https://www.elliotdwright.com")
-		if err != nil {
-			log.Println(err.Error())
+		if strings.HasPrefix(action.ActionKey, "open") {
+			url := strings.SplitN(action.ActionKey, ":", 2)
+
+			fmt.Println(url)
+			fmt.Println(len(url))
+
+			if len(url) != 2 {
+				log.Println("wrong action format")
+				return
+			}
+
+			log.Println(url[1])
+
+			err := open.Run(url[1])
+			if err != nil {
+				log.Println(err.Error())
+			}
 		}
 	}()
 
