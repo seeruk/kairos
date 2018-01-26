@@ -10,6 +10,8 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/godbus/dbus/introspect"
 	"github.com/godbus/dbus/prop"
+	"github.com/gotk3/gotk3/glib"
+	"github.com/gotk3/gotk3/gtk"
 )
 
 const (
@@ -30,8 +32,69 @@ func senderAndPath(serviceName string, sender dbus.Sender) (string, dbus.ObjectP
 	}
 }
 
+func activate(app *gtk.Application) {
+	gtk.Init(nil)
+
+	theme, err := gtk.IconThemeGetDefault()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pixbuf, err := theme.LoadIcon("blueman-tray", 24, 0)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	image, err := gtk.ImageNewFromPixbuf(pixbuf)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	window, err := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	window.Connect("destroy", func() {
+		gtk.MainQuit()
+	})
+
+	grid, _ := gtk.GridNew()
+	grid.SetHAlign(gtk.ALIGN_CENTER)
+	grid.SetVAlign(gtk.ALIGN_CENTER)
+
+	cssProvider, _ := gtk.CssProviderNew()
+	cssProvider.LoadFromData(`
+		.tray-window {
+			background: #2A2A2A;
+		}
+	`)
+
+	styleContext, _ := grid.GetStyleContext()
+	styleContext.AddClass("tray-window")
+	styleContext.AddProvider(cssProvider, 1)
+
+	grid.Add(image)
+	window.Add(grid)
+	window.ShowAll()
+
+	gtk.Main()
+
+	time.Sleep(5 * time.Second)
+
+	os.Exit(1)
+}
+
 func main() {
 	log.Println("Tray starting")
+
+	app, err := gtk.ApplicationNew("com.elliotdwright.cnotifyd.lab.tray", glib.APPLICATION_FLAGS_NONE)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	app.Connect("activate", activate)
+	app.Run(nil)
 
 	conn, err := dbus.SessionBus()
 	if err != nil {
