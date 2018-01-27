@@ -14,4 +14,6 @@
 .glide/
 vendor/
 
+/lab/gcapi/*.json
+/lab/gcapi/gcapi
 /lab/tray/tray
